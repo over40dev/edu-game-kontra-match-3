@@ -7,5 +7,4 @@
 **code:** edu-game-kontra-match-3
 
 **branches:**
-02-Project-Setup
-03-JS-Modules
+06-Draw Sprites

@@ -1,8 +1,18 @@
+import Grid from './Grid.js';
+
 const { init, GameLoop, Sprite, initPointer, track } = kontra;
 export default class Game {
   constructor(height, width) {
     this.height = height;
     this.width = width;
+
+    this.numberOfRows = 8;
+    this.numberOfCols = 8;
+    // matches bean image size
+    this.cellSize = 35; 
+    // add padding so image don't touch cell sides
+    this.cellPadding = 4;
+
 
     this.init();
   }
@@ -21,6 +31,9 @@ export default class Game {
       update: this.update.bind(this),
       render: this.render.bind(this),
     });
+
+    // create grid
+    this.createGrid();
 
     // load game assets
     this.load();
@@ -49,5 +62,16 @@ export default class Game {
     // start our game loop
     console.log('starting our game');
     // this.gameLoop.start();
+  }
+
+  createGrid() {
+    this.grid = new Grid({
+      numberOfRows: this.numberOfRows,
+      numberOfCols: this.numberOfCols,
+      cellSize: this.cellSize + this.cellPadding,
+      x: 25,
+      y: 100,
+      color: 'lavender',
+    });
   }
 }

@@ -2,9 +2,9 @@ import Grid from './Grid.js';
 
 const { init, GameLoop, Sprite, initPointer, track } = kontra;
 export default class Game {
-  constructor(height, width) {
-    this.height = height;
+  constructor(width, height) {
     this.width = width;
+    this.height = height;
 
     this.numberOfRows = 8;
     this.numberOfCols = 8;
@@ -41,12 +41,12 @@ export default class Game {
    
   render() {
     // render sprites with kontra
-    console.log('render');
+    this.grid.render();
   }
   
   update() {
     // update our sprites with kontra
-    console.log('update');
+    // console.log('update');
   }
   
   load() {
@@ -61,7 +61,7 @@ export default class Game {
   start() {
     // start our game loop
     console.log('starting our game');
-    // this.gameLoop.start();
+    this.gameLoop.start();
   }
 
   createGrid() {

@@ -1,10 +1,10 @@
 import Game from './Game.js';
 import { resize } from './resize.js';
 
-const HEIGHT = 640;
 const WIDTH = 360;
+const HEIGHT = 640;
 
-const game = new Game(HEIGHT, WIDTH);
+const game = new Game(WIDTH, HEIGHT);
 
 resize(WIDTH, HEIGHT);
 window.addEventListener('resize', () => {

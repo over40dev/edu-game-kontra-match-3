@@ -54,7 +54,9 @@ export default class Grid {
 
   render() {
     if (this.backgroundSprite) {
+      this.backgroundSprite.context.globalAlpha = 0.2;
       this.backgroundSprite.render();
+      this.backgroundSprite.context.globalAlpha = 1;
     }
     this.gridSprites.forEach(s => { s.render(); });
   }

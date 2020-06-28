@@ -15,3 +15,4 @@
 11-Scaling
 12-Grid-Class
 13-Drawing-the-Grid
+14-Context-Global-Alpha

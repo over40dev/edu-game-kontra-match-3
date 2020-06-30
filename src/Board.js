@@ -24,7 +24,7 @@ export default class Board {
     for (let row = 0; row < this.rows; row++ ) {
       for (let col = 0; col < this.cols; col++ ) {
         const variation = Math.floor(Math.random() * this.blockVariations) + 1;
-        this.grid[row].push(variation);
+        this.grid[row][col] = variation;
       }
     }
   }
@@ -33,15 +33,38 @@ export default class Board {
     for (let row = 0; row < this.rows; row++ ) {
       for (let col = 0; col < this.cols; col++ ) {
         const variation = Math.floor(Math.random() * this.blockVariations) + 1;
-        this.reserveGrid[row].push(variation);
+        this.reserveGrid[row][col] = variation;
       }
     }
   }
 
   consoleLog() {
     if (this.debug) {
-      console.table(this.grid);
-      console.table(this.reserveGrid);
+      let prettyString = '';
+
+      // print reserve grid
+      for (let row = 0; row < this.rows; row++ ) {
+        prettyString += '\n';
+        for (let col = 0; col < this.cols; col++ ) {
+          prettyString += ' ' + this.reserveGrid[row][col];
+        }
+      }
+      
+      // separate our grids
+      prettyString += '\n';
+      for (let col = 0; col < this.cols; col++) {
+        prettyString += ' -';
+      }
+
+      // print our main
+      for (let row = 0; row < this.rows; row++) {
+        prettyString += '\n';
+        for (let col = 0; col < this.cols; col++) {
+          prettyString += ' ' + this.grid[row][col];
+        }
+      }
+
+      console.log(prettyString);
     }
   }
 }

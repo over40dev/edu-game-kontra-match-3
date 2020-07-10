@@ -84,4 +84,16 @@ export default class Board {
     
     this.consoleLog(); 
   }
+
+  checkAdjacent(source, target) {
+    // Absolute value allows us to get a positive answer for
+    // either direction ( + is + and - is +) with Math.abs()
+    const diffRow = Math.abs(source.row - target.row);
+    const diffCol = Math.abs(source.col - target.col);
+
+    // same row; col must only be 1 away
+    // same col; row must only be 1 away
+    const isAdjacent = (diffRow === 1 && diffCol === 0) || (diffRow === 0 && diffCol === 1);
+    return isAdjacent;
+  }
 }

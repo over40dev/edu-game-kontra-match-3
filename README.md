@@ -23,3 +23,4 @@
 19-Valid-Moves
 20-Chains
 21-Find-All-Chains
+22-Clear-Chains

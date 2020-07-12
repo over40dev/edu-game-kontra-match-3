@@ -151,4 +151,18 @@ export default class Board {
     return isChained;
 
   }
+
+  findAllChains() {
+    const chained = [];
+
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.cols; col++) {
+        if (this.isChained({row, col})) {
+          chained.push({row, col});
+        }
+      }
+    }
+
+    return chained;
+  }
 }

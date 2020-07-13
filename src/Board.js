@@ -177,4 +177,18 @@ export default class Board {
 
     this.consoleLog();
   }
+
+  dropBlock(sourceRow, targetRow, col) {
+    this.grid[targetRow][col] = this.grid[sourceRow][col];
+    this.grid[sourceRow][col] = 0;
+    // TODO drop the block object
+    this.consoleLog();
+  }
+  
+  dropReserveBlock(sourceRow, targetRow, col) {
+    this.grid[targetRow][col] = this.reserveGrid[sourceRow][col];
+    this.reserveGrid[sourceRow][col] = 0;
+    // TODO drop the reserved block object
+    this.consoleLog();
+  }
 }

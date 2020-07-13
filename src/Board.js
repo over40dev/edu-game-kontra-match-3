@@ -157,8 +157,8 @@ export default class Board {
 
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
-        if (this.isChained({row, col})) {
-          chained.push({row, col});
+        if (this.isChained({ row, col })) {
+          chained.push({ row, col });
         }
       }
     }
@@ -182,13 +182,56 @@ export default class Board {
     this.grid[targetRow][col] = this.grid[sourceRow][col];
     this.grid[sourceRow][col] = 0;
     // TODO drop the block object
-    this.consoleLog();
+    // this.consoleLog();
   }
-  
+
   dropReserveBlock(sourceRow, targetRow, col) {
     this.grid[targetRow][col] = this.reserveGrid[sourceRow][col];
     this.reserveGrid[sourceRow][col] = 0;
     // TODO drop the reserved block object
+    // this.consoleLog();
+  }
+
+  updateGrid() {
+    // loop backward through main grid rows
+    for (let row = this.rows - 1; row >= 0; row--) {
+      // loop forward through cols
+      for (let col = 0; col < this.cols; col++) {
+        // check if we found empty cell
+        if (this.grid[row][col] === 0) {
+          let foundBlock = false;
+          // if cell empty look to row above for a block
+          for (let rowAbove = row - 1; rowAbove >= 0; rowAbove--) {
+            // check if a block is found (value > 0)
+            if (this.grid[rowAbove][col] > 0) {
+              foundBlock = true;
+              // block found above so drop it down one row
+              this.dropBlock(rowAbove, row, col);
+              // stop looping through for-loop
+              break;
+            }
+          }
+          // if no block found in main grid col 
+          if (!foundBlock) {
+            // check reserve grid col from bottom row up
+            for (let rowAbove = this.rows - 1; rowAbove >= 0; rowAbove--) {
+              // check if a block is found (value > 0)
+              if (this.reserveGrid[rowAbove][col] > 0) {
+                // drop reserve block down to main grid top row
+                this.dropReserveBlock(rowAbove, row, col);
+                // stop looping through for-loop
+                break;
+              }
+
+            }
+          }
+        }
+      }
+    }
+    // re-populate reserve grid
+    this.populateReserveGrid();
+    // comment consoleLog in both dropBlock methods above
+    // test updateGrid changes 
     this.consoleLog();
   }
 }

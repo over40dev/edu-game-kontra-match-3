@@ -165,4 +165,16 @@ export default class Board {
 
     return chained;
   }
+
+  clearChains() {
+    // get all blocks that need to be clear
+    const chainedBlocks = this.findAllChains();
+
+    chainedBlocks.forEach((block) => {
+      // set each cell to 0
+      this.grid[block.row][block.col] = 0;
+    });
+
+    this.consoleLog();
+  }
 }

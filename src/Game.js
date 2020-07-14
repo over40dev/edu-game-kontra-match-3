@@ -1,10 +1,11 @@
 import Grid from './Grid.js';
 import Board from './Board.js';
+import Block from './Block.js';
 
 const { 
   init, GameLoop, Sprite, 
   initPointer, track, 
-  load, on,
+  load, on, Pool
 } = kontra;
 
 export default class Game {
@@ -15,7 +16,7 @@ export default class Game {
     this.numberOfRows = 8;
     this.numberOfCols = 8;
     // matches bean image size
-    this.cellSize = 35;
+    this.blockSize = 35;
     // add padding so image don't touch cell sides
     this.cellPadding = 4;
 
@@ -46,10 +47,13 @@ export default class Game {
     // load game assets
     this.load();
   }
-
+sr
   render() {
-    // render sprites with kontra
     this.grid.render();
+
+    if (this.blockPool) {
+      this.blockPool.render();
+    }
   }
 
   update() {
@@ -83,6 +87,8 @@ export default class Game {
       // start the game loop
       this.start();
       console.log(assets);
+    }).catch((error) => {
+      console.log(error);
     });
 
   }
@@ -91,13 +97,15 @@ export default class Game {
     // start our game loop
     console.log('starting our game');
     this.gameLoop.start();
+    // add this line
+    this.drawBoard();
   }
 
   createGrid() {
     this.grid = new Grid({
       numberOfRows: this.numberOfRows,
       numberOfCols: this.numberOfCols,
-      cellSize: this.cellSize + this.cellPadding,
+      cellSize: this.blockSize + this.cellPadding,
       x: 25,
       y: 100,
       color: 'lavender',
@@ -112,6 +120,30 @@ export default class Game {
       true,
     );
 
-    window.board = this.board;
+    this.blockPool = Pool({
+      create: () => {
+        return new Block();
+      }
+    });
+  }
+
+  drawBoard() {
+    for (let row = 0; row < this.numberOfRows; row++) {
+      for (let col = 0; col < this.numberOfCols; col++) {
+        // calculate x and y position
+        const x = (25 + this.cellPadding) + col * (this.blockSize + this.cellPadding);
+        const y = (100 + this.cellPadding) + row * (this.blockSize + this.cellPadding);
+        
+        const block = this.blockPool.get({
+          x,
+          y,
+          row,
+          col,
+          image: this.assets[this.board.grid[row][col]],
+          ttl: Infinity,
+        });
+        console.log(block);
+      }
+    }
   }
 }

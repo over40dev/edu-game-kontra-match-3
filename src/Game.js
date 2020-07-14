@@ -1,7 +1,12 @@
 import Grid from './Grid.js';
 import Board from './Board.js';
 
-const { init, GameLoop, Sprite, initPointer, track } = kontra;
+const { 
+  init, GameLoop, Sprite, 
+  initPointer, track, 
+  load, on,
+} = kontra;
+
 export default class Game {
   constructor(width, height) {
     this.width = width;
@@ -10,10 +15,9 @@ export default class Game {
     this.numberOfRows = 8;
     this.numberOfCols = 8;
     // matches bean image size
-    this.cellSize = 35; 
+    this.cellSize = 35;
     // add padding so image don't touch cell sides
     this.cellPadding = 4;
-
 
     this.init();
   }
@@ -42,26 +46,47 @@ export default class Game {
     // load game assets
     this.load();
   }
-   
+
   render() {
     // render sprites with kontra
     this.grid.render();
   }
-  
+
   update() {
     // update our sprites with kontra
     // console.log('update');
   }
-  
-  load() {
-    // load our game assets with kontra
-    console.log('loading assets for our game');
 
-    // when assets have been loaded
-    // start the game loop
-    this.start();
+  load() {
+    console.log('load');
+
+    on('assetLoaded', (asset, url) => {
+      asset.id = url;
+    });
+    
+    // load our game assets 
+    // with kontra load method
+    load(
+      'assets/images/bean_blue.png',
+      'assets/images/bean_dead.png',
+      'assets/images/bean_green.png',
+      'assets/images/bean_orange.png',
+      'assets/images/bean_pink.png',
+      'assets/images/bean_purple.png',
+      'assets/images/bean_red.png',
+      'assets/images/bean_white.png',
+      'assets/images/bean_yellow.png',
+    ).then((assets) => {
+      this.assets = assets;
+      
+      // when assets have been loaded
+      // start the game loop
+      this.start();
+      console.log(assets);
+    });
+
   }
-  
+
   start() {
     // start our game loop
     console.log('starting our game');

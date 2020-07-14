@@ -26,3 +26,4 @@
 22-Clear-Chains
 23-Drop-Blocks
 24-Update-Grid
+25-Load-Assets

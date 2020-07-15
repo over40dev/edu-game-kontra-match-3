@@ -29,4 +29,4 @@
 25-Load-Assets
 26-Draw-Blocks
 27-Pick-Blocks
-28-Update-Baord
+28-Update-Board

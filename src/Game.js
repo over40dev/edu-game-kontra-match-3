@@ -24,8 +24,6 @@ export default class Game {
   }
 
   init() {
-    // intialize kontra
-    console.log('initializing our game');
     const { canvas, context } = init();
     this.canvas = canvas;
     this.context = context;
@@ -84,7 +82,6 @@ export default class Game {
     // with kontra load method
     load(
       'assets/images/bean_blue.png',
-      'assets/images/bean_dead.png',
       'assets/images/bean_green.png',
       'assets/images/bean_orange.png',
       'assets/images/bean_pink.png',
@@ -92,6 +89,7 @@ export default class Game {
       'assets/images/bean_red.png',
       'assets/images/bean_white.png',
       'assets/images/bean_yellow.png',
+      'assets/images/bean_dead.png',
     ).then((assets) => {
       this.assets = assets;
       // start the game loop
@@ -234,13 +232,9 @@ export default class Game {
   }
 
   getBlockFromColRow(position) {
-    // 10-update method -- after first test img [1]
+
     let foundBlock;
 
-    // instead of using forEach which we cannot break out of use `.some()`
-    // Note: 
-    /* The some() method executes the callback function once for each element present in the array until it finds the one where callback returns a truthy value (a value that becomes true when converted to a Boolean). If such an element is found, some() immediately returns true . Otherwise, some() returns false */
-    // this.blockPool.getAliveObjects().forEach((block) => {
     this.blockPool.getAliveObjects().some((block) => {
       if (block.row === position.row &&
         block.col === position.col) {
@@ -255,19 +249,30 @@ export default class Game {
   }
 
   dropBlock(sourceRow, targetRow, col) {
-    // 11-get sprite object based row/col provided and update its `y` value
-    // so we can accurately reflect in game
-    // use getBlockfromRowCol method that we just created
     const block = this.getBlockFromColRow({ col, row: sourceRow, });
-    // copy from drawBoard method
+    // copy formula from drawBoard method above
     const targetY = (100 + this.cellPadding) + targetRow * (this.blockSize + this.cellPadding);
-    console.log(block);
     block.row = targetRow;
     block.y = targetY;
   }
 
   dropReserveBlock(sourceRow, targetRow, col) {
-    console.log('dropReserveBlock');
+    const x = (25 + this.cellPadding) + col * (this.blockSize + this.cellPadding);
+    const y = (100 + this.cellPadding) + targetRow * (this.blockSize + this.cellPadding);
+    const block = this.blockPool.get({
+      x,
+      y,
+      col,
+      row: targetRow,
+      image: this.assets[this.board.grid[targetRow][col]],
+      ttl: Infinity,
+    });
+
+    block.onDown = () => {
+      this.pickBlock(block);
+    };
+
+    track(block);
   }
 
 }

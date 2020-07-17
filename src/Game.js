@@ -48,7 +48,6 @@ export default class Game {
     this.load();
   }
 
-  // render blocks indicating selected
   render() {
     this.grid.render();
 
@@ -70,7 +69,6 @@ export default class Game {
     }
   }
 
-  // modify update to call update method on blockPool
   update() {
     if (this.blockPool) {
       this.blockPool.update();
@@ -96,12 +94,9 @@ export default class Game {
       'assets/images/bean_yellow.png',
     ).then((assets) => {
       this.assets = assets;
-
-      // when assets have been loaded
       // start the game loop
       this.start();
-      // remove console.log
-      // console.log(assets);
+
     }).catch((error) => {
       console.log(error);
     });
@@ -109,10 +104,7 @@ export default class Game {
   }
 
   start() {
-    // start our game loop
-    console.log('starting our game');
     this.gameLoop.start();
-    // add this line
     this.drawBoard();
   }
 
@@ -129,6 +121,7 @@ export default class Game {
 
   createBoard() {
     this.board = new Board(
+      this,
       this.numberOfRows,
       this.numberOfRows,
       6,
@@ -187,8 +180,7 @@ export default class Game {
         // swap blocks
         this.swapBlocks(this.selectedBlock, this.targetBlock);
       } else {
-        // if this is not valid move clear 
-        // so player can choose a different block
+        // not valid so clear and player try another selection
         this.clearSelection();
       }
 
@@ -204,7 +196,6 @@ export default class Game {
     block2.x = tempX;
     block2.y = tempY;
 
-    // call swap method on Board class which ensures swap is valid
     this.board.swap(block1, block2);
 
     // check for chains unless reverse swap
@@ -214,10 +205,6 @@ export default class Game {
         this.updateBoard();
       } else {
         this.isReversingSwap = true;
-        // call swapBlocks recursively (method calling itself)
-        // until all chains have been cleared. At this point
-        // reverse swap is set to true and selection cleared
-        // so player can continue to play game.
         this.swapBlocks(block1, block2);
       }
     } else {
@@ -226,7 +213,7 @@ export default class Game {
     }
 
   }
-  
+
   clearSelection() {
     this.isBoardBlocked = false;
     this.selectedBlock.selected = false;
@@ -236,7 +223,7 @@ export default class Game {
   updateBoard() {
     this.board.clearChains();
     this.board.updateGrid();
-    
+
     const chains = this.board.findAllChains();
 
     if (chains.length > 0) {
@@ -245,4 +232,42 @@ export default class Game {
       this.clearSelection();
     }
   }
+
+  getBlockFromColRow(position) {
+    // 10-update method -- after first test img [1]
+    let foundBlock;
+
+    // instead of using forEach which we cannot break out of use `.some()`
+    // Note: 
+    /* The some() method executes the callback function once for each element present in the array until it finds the one where callback returns a truthy value (a value that becomes true when converted to a Boolean). If such an element is found, some() immediately returns true . Otherwise, some() returns false */
+    // this.blockPool.getAliveObjects().forEach((block) => {
+    this.blockPool.getAliveObjects().some((block) => {
+      if (block.row === position.row &&
+        block.col === position.col) {
+        foundBlock = block;
+        return true;
+      }
+      return false;
+    });
+
+    return foundBlock;
+
+  }
+
+  dropBlock(sourceRow, targetRow, col) {
+    // 11-get sprite object based row/col provided and update its `y` value
+    // so we can accurately reflect in game
+    // use getBlockfromRowCol method that we just created
+    const block = this.getBlockFromColRow({ col, row: sourceRow, });
+    // copy from drawBoard method
+    const targetY = (100 + this.cellPadding) + targetRow * (this.blockSize + this.cellPadding);
+    console.log(block);
+    block.row = targetRow;
+    block.y = targetY;
+  }
+
+  dropReserveBlock(sourceRow, targetRow, col) {
+    console.log('dropReserveBlock');
+  }
+
 }

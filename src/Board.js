@@ -1,5 +1,6 @@
 export default class Board {
-  constructor(rows, cols, blockVariations, debug = false) {
+  constructor(state, rows, cols, blockVariations, debug = false) {
+    this.state = state;
     this.rows = rows;
     this.cols = cols;
     this.blockVariations = blockVariations;
@@ -166,6 +167,7 @@ export default class Board {
     return chained;
   }
 
+  // 6-modify - this.state.getBlockFromColRow(block).kill();
   clearChains() {
     // get all blocks that need to be clear
     const chainedBlocks = this.findAllChains();
@@ -173,6 +175,8 @@ export default class Board {
     chainedBlocks.forEach((block) => {
       // set each cell to 0
       this.grid[block.row][block.col] = 0;
+      // destroy block object - this is a new method we'll add to Block and Game
+      this.state.getBlockFromColRow(block); //.kill() - need to wait until function before it actually returns a value; right now just doing console log in that function in Game;
     });
 
     this.consoleLog();
@@ -181,15 +185,15 @@ export default class Board {
   dropBlock(sourceRow, targetRow, col) {
     this.grid[targetRow][col] = this.grid[sourceRow][col];
     this.grid[sourceRow][col] = 0;
-    // TODO drop the block object
-    // this.consoleLog();
+
+    this.state.dropBlock(sourceRow, targetRow, col)
   }
 
   dropReserveBlock(sourceRow, targetRow, col) {
     this.grid[targetRow][col] = this.reserveGrid[sourceRow][col];
     this.reserveGrid[sourceRow][col] = 0;
-    // TODO drop the reserved block object
-    // this.consoleLog();
+
+    this.state.dropReserveBlock(sourceRow, targetRow, col);
   }
 
   updateGrid() {

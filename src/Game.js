@@ -250,12 +250,11 @@ export default class Game {
 
   dropBlock(sourceRow, targetRow, col) {
     const block = this.getBlockFromColRow({ col, row: sourceRow, });
-    // copy formula from drawBoard method above
     const targetY = (100 + this.cellPadding) + targetRow * (this.blockSize + this.cellPadding);
     block.row = targetRow;
     block.y = targetY;
   }
-
+  
   dropReserveBlock(sourceRow, targetRow, col) {
     const x = (25 + this.cellPadding) + col * (this.blockSize + this.cellPadding);
     const y = (100 + this.cellPadding) + targetRow * (this.blockSize + this.cellPadding);
@@ -274,5 +273,4 @@ export default class Game {
 
     track(block);
   }
-
 }

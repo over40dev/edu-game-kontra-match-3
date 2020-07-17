@@ -21,12 +21,20 @@ export default class Board {
     this.consoleLog();
   }
 
+  // start with no chains already on game board
   populateGrid() {
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         const variation = Math.floor(Math.random() * this.blockVariations) + 1;
         this.grid[row][col] = variation;
       }
+    }
+
+    // setup recursive call (method calling itself)
+    // to populateGrid() until no more chains exist
+    const chains = this.findAllChains();
+    if (chains.length > 0) {
+      this.populateGrid();
     }
   }
 
@@ -167,19 +175,18 @@ export default class Board {
     return chained;
   }
 
-  // 6-modify - this.state.getBlockFromColRow(block).kill();
   clearChains() {
-    // get all blocks that need to be clear
     const chainedBlocks = this.findAllChains();
 
     chainedBlocks.forEach((block) => {
-      // set each cell to 0
       this.grid[block.row][block.col] = 0;
-      // destroy block object - this is a new method we'll add to Block and Game
-      this.state.getBlockFromColRow(block); //.kill() - need to wait until function before it actually returns a value; right now just doing console log in that function in Game;
+      // add this method call to destroy block object
+      this.state.getBlockFromColRow(block).kill();
+      // - this - refers to Board class we are in now
+      // - .state - refers to Game class (passed to Board)
+      // - .getBlockFromColRow() - created in Game class
+      // - .kill() - created in Block class
     });
-
-    this.consoleLog();
   }
 
   dropBlock(sourceRow, targetRow, col) {
@@ -234,8 +241,5 @@ export default class Board {
     }
     // re-populate reserve grid
     this.populateReserveGrid();
-    // comment consoleLog in both dropBlock methods above
-    // test updateGrid changes 
-    this.consoleLog();
   }
 }
